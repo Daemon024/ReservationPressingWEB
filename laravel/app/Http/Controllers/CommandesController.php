@@ -41,7 +41,7 @@ class CommandesController extends Controller
       $prestation = Prestations::where('id', $data['prestations_id'])
                ->take(1)
                ->get();
-      return view('prestationsviews/confirmationReservation', compact('commande','client','produit','prestation'))
+      return view('appviews/confirmationReservation', compact('commande','client','produit','prestation'))
                        ->with('commande', $commande)
                        ->with('client', $client)
                        ->with('produit', $produit)
@@ -53,7 +53,7 @@ class CommandesController extends Controller
        $userId = Auth::id();
        $produits = DB::table('Produits')->lists('nom', 'id');
        $prestations = DB::table('Prestations')->lists('nom', 'id');
-       return view('prestationsviews/reservation', compact('userId','produits','prestations'))
+       return view('appviews/reservation', compact('userId','produits','prestations'))
                        ->with('userId', $userId)
                        ->with('prestations', $prestations)
                        ->with('produits', $produits);
@@ -103,7 +103,7 @@ class CommandesController extends Controller
                 ->orderBy('count', 'desc')
                 ->lists('count');
         // Requête séparé en deux parties pour les statistiques client avec ChartsJS
-        return view('prestationsviews/dashboard', compact('GraphCommandesT','GraphCommandesN','Commandes'))
+        return view('appviews/dashboard', compact('GraphCommandesT','GraphCommandesN','Commandes'))
                        ->with('Commandes', $Commandes)
                        ->with('GraphCommandesT', $GraphCommandesT)
                        ->with('GraphCommandesN', $GraphCommandesN);

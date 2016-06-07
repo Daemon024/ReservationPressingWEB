@@ -42,7 +42,7 @@ class ClientController extends Controller
      	 	$passClient = $leClient->password;
      	 }
      	 //
-      return view('prestationsviews/editclient', compact('leClient','NomClient','PrenomClient','AdresseClient','CodePostalClient','VilleClient','emailClient','telClient','passClient'))
+      return view('appviews/editclient', compact('leClient','NomClient','PrenomClient','AdresseClient','CodePostalClient','VilleClient','emailClient','telClient','passClient'))
                        ->with('leClient', $leClient)
                        ->with('NomClient', $NomClient)
                        ->with('PrenomClient', $PrenomClient)
@@ -72,6 +72,6 @@ class ClientController extends Controller
 		            'password'    => bcrypt($data['password']),
 		        ];
     	DB::table('Clients')->where('id', $userId)->limit(1)->update($update);
-    	return view('prestationsviews/dashboard');
+    	return view('appviews/dashboard');
 	}
 }
