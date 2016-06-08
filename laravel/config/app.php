@@ -146,6 +146,7 @@ return [
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
         "Khill\Lavacharts\Laravel\LavachartsServiceProvider",
         Fx3costa\Laravelchartjs\Providers\ChartjsServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,

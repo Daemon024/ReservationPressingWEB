@@ -7,7 +7,7 @@
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
-	"laravelcollective/html": "5.2.*",
+	      "laravelcollective/html": "5.2.*",
         "fx3costa/laravelchartjs": "*",
         "nesbot/carbon": "^1.21",
         "barryvdh/laravel-debugbar": "^2.2"

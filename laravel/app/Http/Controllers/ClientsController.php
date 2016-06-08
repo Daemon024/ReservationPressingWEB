@@ -42,7 +42,7 @@ class ClientController extends Controller
      	 	$passClient = $leClient->password;
      	 }
      	 //
-      return view('appviews/editclient', compact('leClient','NomClient','PrenomClient','AdresseClient','CodePostalClient','VilleClient','emailClient','telClient','passClient'))
+      return view('appviews/compte', compact('leClient','NomClient','PrenomClient','AdresseClient','CodePostalClient','VilleClient','emailClient','telClient','passClient'))
                        ->with('leClient', $leClient)
                        ->with('NomClient', $NomClient)
                        ->with('PrenomClient', $PrenomClient)
