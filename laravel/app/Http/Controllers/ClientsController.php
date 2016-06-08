@@ -61,17 +61,31 @@ class ClientController extends Controller
     // avec un for each on parcours l'array que la Request nous à renvoyé et on le file avec une requete update sur la BDD pour update les champs.
     $userId = Auth::id();
     $data = Request::all();
-		$update = [
-		            'nom'     => $data['nom'],
-		            'prenom'   => $data['prenom'],
-		            'adresse'     => $data['adresse'],
-		            'codepostal'    => $data['codepostal'],
-		            'ville'    => $data['ville'],
-		            'email'    => $data['email'],
-		            'tel'    => $data['tel'],
-		            'password'    => bcrypt($data['password']),
-		        ];
+    if(is_null($data['password'])){
+      $update = [
+                  'nom'     => $data['nom'],
+                  'prenom'   => $data['prenom'],
+                  'adresse'     => $data['adresse'],
+                  'codepostal'    => $data['codepostal'],
+                  'ville'    => $data['ville'],
+                  'email'    => $data['email'],
+                  'tel'    => $data['tel'],
+
+              ];
+    }
+    else {
+      $update = [
+                  'nom'     => $data['nom'],
+                  'prenom'   => $data['prenom'],
+                  'adresse'     => $data['adresse'],
+                  'codepostal'    => $data['codepostal'],
+                  'ville'    => $data['ville'],
+                  'email'    => $data['email'],
+                  'tel'    => $data['tel'],
+                  'password'    => bcrypt($data['password']),
+              ];
+    }
     	DB::table('Clients')->where('id', $userId)->limit(1)->update($update);
-    	return view('appviews/dashboard');
+      return redirect('/dashboard');
 	}
 }
