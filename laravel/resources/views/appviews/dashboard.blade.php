@@ -97,7 +97,7 @@
       <script>
       var ctx = document.getElementById("myChart2");
       var myChart2 = new Chart(ctx, {
-          type: 'bar',
+          type: 'horizontalBar',
 
           data: {
             labels: {!!json_encode($GraphPrestaT)!!},
