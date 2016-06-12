@@ -51,7 +51,9 @@
          <p style="font-weight:300;font-size:18px;">Typologie des vétements déposés</p>
          <canvas id="myChart" height="150px" width="400px"></canvas>
       </div>
-      <div class="col s6"><div id"Yolo" style="text-align:center;padding-top:25%;padding-bottom:25%;width:100%;height:100%;">Calendrier</div></div>
+      <div class="col s6">
+        <p style="font-weight:300;font-size:18px;">Typologie des prestations</p>
+         <canvas id="myChart2" height="150px" width="400px"></canvas>
       </div>
       <div class="col s12" style="text-align: center;background-color: #EAEAEA;position: relative;bottom: 0;width: 100%;"><p color="#565F76;">PRESSING DES HALLES - 17 Rue verchant  - 04 67 90 67 21</p></div>
       </div>
@@ -92,6 +94,31 @@
             }
         });
       </script>
+      <script>
+      var ctx = document.getElementById("myChart2");
+      var myChart2 = new Chart(ctx, {
+          type: 'bar',
+
+          data: {
+            labels: {!!json_encode($GraphPrestaT)!!},
+
+            datasets: [{
+            backgroundColor: ["#6332B3","#36A2EB","#FFCE56"],
+            hoverBackgroundColor: ["#FF6384","#36A2EB","#FFCE56"],
+            data: {!!json_encode($GraphPrestaN)!!}
+          }]
+        },
+          options: {
+              scales: {
+                  yAxes: [{
+                      gridLines: {
+                          lineWidth: 0
+                      }
+                  }]
+              }
+          }
+      });
+    </script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.min.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.bundle.min.js"></script>

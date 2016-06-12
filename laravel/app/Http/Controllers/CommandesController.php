@@ -28,6 +28,61 @@ class CommandesController extends Controller
     public function store()
     {
       $data = Request::all();
+      return $data;
+      ///////////////////////////////////////////////////////////////
+      $nomProduitI = '';
+      $produits_idI = '';
+      $tarifI = '';
+      $prestaidI = '';
+      $idProduit = Produits::where('nom', $data['nomProduit'])
+               ->take(1)
+               ->lists('id');
+      ///////////////////////////////////////////////////////////////
+      $idPresta = Prestations::where('nom', $data['prestations_id'])
+               ->take(1)
+               ->get();
+      ///////////////////////////////////////////////////////////////
+      $laCommande = DB::table('Prestations')
+      ->join('Produits', 'produits_id', '=', 'Produits.id')
+      ->join('Tarifs', 'prestations_id', '=', 'Prestations.id')
+      ->where('Prestations.nom', '=', $data['prestations_id'])
+      ->where('Prestations.produits_id', '=', $idProduit)
+      ->get();
+      ///////////////////////////////////////////////////////////////
+      foreach ($laCommande as $laCommande) {
+        $nomProduitI = $laCommande->nom;
+        $produits_idI = $laCommande->produits_id;
+        $tarifI = $laCommande->tarif;
+        $prestaidI = $laCommande->prestations_id;
+      }
+      ///////////////////////////////////////////////////////////////
+      if(is_null($data['password'])){
+        $update = [
+                    'nom'     => $data['nom'],
+                    'prenom'   => $data['prenom'],
+                    'adresse'     => $data['adresse'],
+                    'codepostal'    => $data['codepostal'],
+                    'ville'    => $data['ville'],
+                    'email'    => $data['email'],
+                    'tel'    => $data['tel'],
+
+                ];
+      }
+      else {
+        $update = [
+                    'nom'     => $data['nom'],
+                    'prenom'   => $data['prenom'],
+                    'adresse'     => $data['adresse'],
+                    'codepostal'    => $data['codepostal'],
+                    'ville'    => $data['ville'],
+                    'email'    => $data['email'],
+                    'tel'    => $data['tel'],
+                    'password'    => bcrypt($data['password']),
+                ];
+      }
+        DB::table('Clients')->where('id', $userId)->limit(1)->update($update);
+        return redirect('/dashboard');
+      ///////////////////////////////////////////////////////////////
       $commande = Commandes::where('clients_id', $data['clients_id'])
                ->where('Commandes.dateDepot', $data['dateDepot'])
                ->take(1)
@@ -41,6 +96,7 @@ class CommandesController extends Controller
       $prestation = Prestations::where('id', $data['prestations_id'])
                ->take(1)
                ->get();
+      return $data;
       return view('appviews/confirmationReservation', compact('commande','client','produit','prestation'))
                        ->with('commande', $commande)
                        ->with('client', $client)
@@ -52,10 +108,34 @@ class CommandesController extends Controller
     {
        $userId = Auth::id();
        $produits = DB::table('Produits')->lists('nom', 'id');
-       $prestations = DB::table('Prestations')->lists('nom', 'id');
-       return view('appviews/reservation', compact('userId','produits','prestations'))
+      //  $prestationsProduits = DB::table('Prestations')
+      //   ->join('Produits', 'produits_id', '=', 'Produits.id')
+      //   ->join('Tarifs', 'prestations_id', '=', 'Prestations.id')
+      //   ->selectRaw('DISTINCT(Produits.nom) as nomProduit, Prestations.nom as nomPrestation, Tarifs.tarif as Tarif')
+      //   ->orderBy('Produits.nom','desc')
+      //   ->lists('nomProduit');
+
+      $prestationsProduits = DB::table('Prestations')
+      ->join('Produits', 'produits_id', '=', 'Produits.id')
+      ->join('Tarifs', 'prestations_id', '=', 'Prestations.id')
+      ->selectRaw(('DISTINCT(Produits.nom)'))->groupBy('Produits.nom')->pluck('Produits.nom','Produits.nom');
+
+      $prestationsPrestations = DB::table('Prestations')
+       ->join('Produits', 'produits_id', '=', 'Produits.id')
+       ->join('Tarifs', 'prestations_id', '=', 'Prestations.id')
+       ->selectRaw(('DISTINCT(Prestations.nom)'))->groupBy('Produits.nom')->pluck('Prestations.nom','Prestations.nom');
+
+      $prestationsTarifs = DB::table('Prestations')
+        ->join('Produits', 'produits_id', '=', 'Produits.id')
+        ->join('Tarifs', 'prestations_id', '=', 'Prestations.id')
+        ->selectRaw(('DISTINCT(Tarifs.tarif)'))->groupBy('Tarifs.tarif')->lists('Tarifs.tarif');
+      // return $prestationsTarifs;
+
+       return view('appviews/reservation', compact('userId','produits','prestationsProduits','prestationsProduits','prestationsTarifs'))
                        ->with('userId', $userId)
-                       ->with('prestations', $prestations)
+                       ->with('prestationsProduits', $prestationsProduits)
+                       ->with('prestationsPrestations', $prestationsPrestations)
+                       ->with('prestationsTarifs', $prestationsTarifs)
                        ->with('produits', $produits);
     }
     //------------------------------------------------------------------------------------------//
@@ -77,12 +157,6 @@ class CommandesController extends Controller
                 ->orderBy('Commandes.id','desc')
                 ->get();
         //------------------------------------------------------------------------------------------//
-        $CalendrierFetch = json_encode(DB::table('Commandes')->where('Commandes.clients_id', $userId)
-                ->join('Clients', 'clients_id', '=', 'Clients.id')
-                ->join('Prestations', 'prestations_id', '=', 'Prestations.id')
-                ->join('Produits', 'produits_id', '=', 'Produits.id')
-                ->orderBy('dateDepot')
-                ->lists('dateDepot','Produits.nom'));
         $GraphCommandesT = DB::table('Commandes')->where('Commandes.clients_id', $userId)
                 ->join('Clients', 'clients_id', '=', 'Clients.id')
                 ->join('Prestations', 'prestations_id', '=', 'Prestations.id')
@@ -102,11 +176,35 @@ class CommandesController extends Controller
                 ->groupBy('Produits.nom')
                 ->orderBy('count', 'desc')
                 ->lists('count');
+                //-----------------------------------------------------------------------------------------//
+        $GraphPrestaN = DB::table('Commandes')->where('Commandes.clients_id', $userId)
+                ->join('Clients', 'clients_id', '=', 'Clients.id')
+                ->join('Prestations', 'prestations_id', '=', 'Prestations.id')
+                ->join('Produits', 'produits_id', '=', 'Produits.id')
+                // ->join('Tarifs', 'Tarifs.Prestations_id', '=', 'Prestations.id')
+                ->selectRaw('Prestations.nom, COUNT(*) as count')
+                ->groupBy('Prestations.nom')
+                ->orderBy('count', 'desc')
+                ->lists('count');
+        //-----------------------------------------------------------------------------------------//
+        $GraphPrestaT = DB::table('Commandes')->where('Commandes.clients_id', $userId)
+                ->join('Clients', 'clients_id', '=', 'Clients.id')
+                ->join('Prestations', 'prestations_id', '=', 'Prestations.id')
+                ->join('Produits', 'produits_id', '=', 'Produits.id')
+                // ->join('Tarifs', 'Tarifs.Prestations_id', '=', 'Prestations.id')
+                ->selectRaw('Prestations.nom, COUNT(*) as count')
+                ->groupBy('Prestations.nom')
+                ->orderBy('count', 'desc')
+                ->lists('Prestations.nom');
+        //-----------------------------------------------------------------------------------------//
         // Requête séparé en deux parties pour les statistiques client avec ChartsJS
-        return view('appviews/dashboard', compact('GraphCommandesT','GraphCommandesN','Commandes'))
+        return view('appviews/dashboard', compact('GraphCommandesT','GraphCommandesN','Commandes','GraphPrestaN','GraphPrestaT'))
                        ->with('Commandes', $Commandes)
+                       ->with('GraphPrestaN', $GraphPrestaN)
+                       ->with('GraphPrestaT', $GraphPrestaT)
                        ->with('GraphCommandesT', $GraphCommandesT)
                        ->with('GraphCommandesN', $GraphCommandesN);
+                       // ->with('calendar', $calendar);
         //------------------------------------------------------------------------------------------//
     }
 }

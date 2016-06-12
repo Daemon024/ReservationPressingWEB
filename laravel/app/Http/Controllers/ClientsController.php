@@ -18,6 +18,8 @@ use App\Http\Requests;
 class ClientController extends Controller
 {
     public function ClientEdit (){
+      // On recupère les informations du clients connecté, on initialise des variables pour stocker chaque info et on le retourne a la view
+      //
     	 $userId = Auth::id();
     	 $NomClient = '';
     	 $PrenomClient = '';
@@ -88,4 +90,15 @@ class ClientController extends Controller
     	DB::table('Clients')->where('id', $userId)->limit(1)->update($update);
       return redirect('/dashboard');
 	}
+  public function warningSupprClient(){
+      return view('appviews/suppressioncompte');
+      // return redirect('/suppressioncompte');
+  }
+  public function supprClient(){
+      $userId = Auth::id();
+      DB::table('Commandes')->where('clients_id', $userId)->delete();
+      DB::table('Clients')->where('id', $userId)->limit(1)->delete();
+      Auth::logout();
+      return redirect('/');
+  }
 }

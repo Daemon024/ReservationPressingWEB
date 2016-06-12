@@ -43,6 +43,7 @@
             box-sizing: content-box; !important;
             transition: all 0.3s; !important;
             margin-top: 5px; !important;
+            color:white; !important;
         };
         </style>
     <!-- Fonts -->

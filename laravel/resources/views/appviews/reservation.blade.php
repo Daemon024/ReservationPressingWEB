@@ -17,11 +17,11 @@
                 </div>
                 <div class="form-group">
                     <p style="font-size:12px;">VOTRE PRODUIT - Quel est votre produit ? </p>
-                    {!! Form::select('produits_id', $produits, array('class' => 'form-control')) !!}
+                    {!! Form::select('nomProduit', $prestationsProduits, array('class' => 'form-control')) !!}
                 </div>
                 <div class="form-group">
                     <p style="font-size:12px;">PRESTATION - Quelle préstation avez-vous besoin pour votre produit ? </p>
-                    {!! Form::select('prestations_id', $prestations, array('class' => 'form-control')) !!}
+                    {!! Form::select('prestations_id', $prestationsPrestations, array('class' => 'form-control')) !!}
                 </div>
                   <div class="form-group" style="display:none;">
                     {!! Form::label('Client') !!}<br />

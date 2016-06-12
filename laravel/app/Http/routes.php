@@ -31,4 +31,12 @@ Route::get('reservation', [
     'middleware' => 'auth',
     'uses' => 'CommandesController@priseReservation'
 ]);
+Route::get('cloture', [
+    'middleware' => 'auth',
+    'uses' => 'ClientController@warningSupprClient'
+]);
+Route::get('supprClient', [
+    'middleware' => 'auth',
+    'uses' => 'ClientController@supprClient'
+]);
 Route::get('/home', 'HomeController@index');

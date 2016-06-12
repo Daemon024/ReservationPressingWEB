@@ -77,6 +77,23 @@
             border-style: solid;
             /* height: 20px; */
         };
+        input:not([type]), input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
+            background-color: #363C44; !important;
+            border: none; !important;
+            border: 1px solid #FFFFFF; !important;
+            border-radius: 0; !important;
+            outline: none; !important;
+            height: 3rem; !important;
+            width: 100%; !important;
+            font-size: 1rem; !important;
+            margin: 0 0 15px 0; !important;
+            padding: 0; !important;
+            box-shadow: none; !important;
+            box-sizing: content-box; !important;
+            transition: all 0.3s; !important;
+            margin-top: 5px; !important;
+            color:white; !important;
+        };
         </style>
         <script>
         $(document).ready(function() {
@@ -130,7 +147,7 @@
             <li><a class="waves-effect waves-light btn-large" href="{{ url('/dashboard') }}" style="padding-bottom: 5px;height: 40px;line-height: 40px;background-color: #363C44;color: white;font-weight: 400;font-size: 11px;border-left: 2px;border-right: 2px;border-bottom: 2px;border-top: 2px;border-style: solid;" >Mon historique</a></li>
             <li><a class="waves-effect waves-light btn-large" href="{{ url('/reservation') }}" style="padding-bottom: 5px;height: 40px;line-height: 40px;background-color: #363C44;color: white;font-weight: 400;font-size: 11px;border-left: 2px;border-right: 2px;border-bottom: 2px;border-top: 2px;border-style: solid;">Faire une réservation</a></li>
             <li><a class="waves-effect waves-light btn-large" href="{{ url('/compte') }}" style="padding-bottom: 5px;height: 40px;line-height: 40px;background-color: #363C44;color: white;font-weight: 400;font-size: 11px;border-left: 2px;border-right: 2px;border-bottom: 2px;border-top: 2px;border-style: solid;">Mon compte</a></li>
-             <p style="display:inline;padding-right:10px;font-weight:300;">Bienvenue {{ Auth::user()->nom}} {{ Auth::user()->prenom}}
+             <p style="display:inline;padding-right:10px;font-weight:300;">Bienvenue {{ Auth::user()->nom[0]}} {{ Auth::user()->prenom}}
              <a href="{{ url('/logout') }}" style="font-size: 9px;font-weight: 600;padding-left: 15px;">Se deconnecter</a></p>
         @endif
       </ul>
