@@ -28,12 +28,13 @@ class CommandesController extends Controller
     public function store()
     {
       $data = Request::all();
-      return $data;
+
       ///////////////////////////////////////////////////////////////
       $nomProduitI = '';
       $produits_idI = '';
       $tarifI = '';
       $prestaidI = '';
+      $userId = Auth::id();
       $idProduit = Produits::where('nom', $data['nomProduit'])
                ->take(1)
                ->lists('id');
@@ -56,31 +57,28 @@ class CommandesController extends Controller
         $prestaidI = $laCommande->prestations_id;
       }
       ///////////////////////////////////////////////////////////////
-      if(is_null($data['password'])){
+      if(is_null($data['commentaire'])){
         $update = [
-                    'nom'     => $data['nom'],
-                    'prenom'   => $data['prenom'],
-                    'adresse'     => $data['adresse'],
-                    'codepostal'    => $data['codepostal'],
-                    'ville'    => $data['ville'],
-                    'email'    => $data['email'],
-                    'tel'    => $data['tel'],
-
+                    'commentaire'     => 'Aucun commentaire',
+                    'dateDepot'   => $data['dateDepot'],
+                    'pretPourRecuperation' => '0',
+                    'prestations_id'     => $prestaidI,
+                    'clients_id'    => $userId,
+                    'employes_id'    => '1',
                 ];
       }
       else {
         $update = [
-                    'nom'     => $data['nom'],
-                    'prenom'   => $data['prenom'],
-                    'adresse'     => $data['adresse'],
-                    'codepostal'    => $data['codepostal'],
-                    'ville'    => $data['ville'],
-                    'email'    => $data['email'],
-                    'tel'    => $data['tel'],
-                    'password'    => bcrypt($data['password']),
+                    'commentaire'     => $data['commentaire'],
+                    'dateDepot'   => $data['dateDepot'],
+                    'pretPourRecuperation' => '0',
+                    'prestations_id'     => $prestaidI,
+                    'clients_id'    => $userId,
+                    'employes_id'    => '1',
                 ];
       }
-        DB::table('Clients')->where('id', $userId)->limit(1)->update($update);
+      // return $update;
+        DB::table('Commandes')->insert($update);
         return redirect('/dashboard');
       ///////////////////////////////////////////////////////////////
       $commande = Commandes::where('clients_id', $data['clients_id'])
