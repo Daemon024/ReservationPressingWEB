@@ -9,6 +9,7 @@ use App\Commandes;
 use App\Clients;
 use App\Employes;
 use App\Produits;
+use App\Tarifs;
 use Auth;
 use DateTime;
 use Carbon\Carbon;
@@ -28,7 +29,7 @@ class CommandesController extends Controller
     public function store()
     {
       $data = Request::all();
-
+      $date = Carbon::createFromFormat('d/m/Y', $data['dateDepot']);
       ///////////////////////////////////////////////////////////////
       $nomProduitI = '';
       $produits_idI = '';
@@ -60,7 +61,7 @@ class CommandesController extends Controller
       if(is_null($data['commentaire'])){
         $update = [
                     'commentaire'     => 'Aucun commentaire',
-                    'dateDepot'   => $data['dateDepot'],
+                    'dateDepot'   => $date,
                     'pretPourRecuperation' => '0',
                     'prestations_id'     => $prestaidI,
                     'clients_id'    => $userId,
@@ -70,7 +71,7 @@ class CommandesController extends Controller
       else {
         $update = [
                     'commentaire'     => $data['commentaire'],
-                    'dateDepot'   => $data['dateDepot'],
+                    'dateDepot'   => $date,
                     'pretPourRecuperation' => '0',
                     'prestations_id'     => $prestaidI,
                     'clients_id'    => $userId,
@@ -78,27 +79,32 @@ class CommandesController extends Controller
                 ];
       }
       // return $update;
-        DB::table('Commandes')->insert($update);
-        return redirect('/dashboard');
+      DB::table('Commandes')->insert($update);
       ///////////////////////////////////////////////////////////////
-      $commande = Commandes::where('clients_id', $data['clients_id'])
-               ->where('Commandes.dateDepot', $data['dateDepot'])
+      $commande = Commandes::where('clients_id', $userId)
+               ->where('Commandes.commentaire', $data['commentaire'])
+               ->where('prestations_id', $prestaidI)
                ->take(1)
                ->get();
-      $client = Clients::where('id', $data['clients_id'])
+      $client = Clients::where('id', $userId)
                ->take(1)
                ->get();
-      $produit = Produits::where('id', $data['produits_id'])
+      $produit = Produits::where('id', $produits_idI)
                ->take(1)
                ->get();
-      $prestation = Prestations::where('id', $data['prestations_id'])
+      $prestation = Prestations::where('id', $prestaidI)
                ->take(1)
                ->get();
-      return $data;
-      return view('appviews/confirmationReservation', compact('commande','client','produit','prestation'))
+      $tarif = Tarifs::where('prestations_id', $prestaidI)
+               ->take(1)
+               ->get();
+               
+      return view('appviews/confirmationReservation', compact('commande','client','produit','tarif','prestation'))
                        ->with('commande', $commande)
                        ->with('client', $client)
                        ->with('produit', $produit)
+                       ->with('date', $date)
+                       ->with('tarif', $tarif)
                        ->with('prestation', $prestation);
     }
     //------------------------------------------------------------------------------------------//

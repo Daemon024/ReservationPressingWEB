@@ -72,6 +72,12 @@ input {
     $('select').material_select();
   });
 </script>
+<script>
+$('.datepicker').pickadate({
+  selectMonths: true,
+  selectYears: 15
+});
+</script>
     </body>
 </html>
 @endsection
