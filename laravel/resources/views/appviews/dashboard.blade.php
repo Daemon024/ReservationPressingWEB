@@ -3,7 +3,14 @@
     <div class="container" style="width:100%;background-color:#FAFAFA">
     <div class="row">
       <div class="col s12" style="padding-left:25px;padding-right:20px;">
-       <h4>Votre historique</h4>
+       <h4>Votre historique</h4><p style="float: right;margin-top: -10px;padding-right: 5px;">  <?php
+        echo "Vous avez : ".($pointsFidelités[0])." points de <b>fidélité</b>.";
+        ?>
+        <?php
+        if ($pointsFidelités[0] > 100) {
+          echo "Vous avez droit à 10€ de réduction";
+        }
+        ?></p>
         <table class="table responsive-table highlight">
             <tbody>
                 <thead>
