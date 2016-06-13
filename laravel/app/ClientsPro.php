@@ -8,13 +8,10 @@ use App\Tarifs;
 use App\Clients;
 use Illuminate\Database\Eloquent\Model;
 
-class Clients extends Model
+class ClientsPro extends Model
 {
-	protected $table = 'Clients';
-    protected $fillable = ['id','nom','prenom','adresse', 'codepostal', 'ville', 'email', 'tel','password','ClientsPro_idClientsPro'];
-
-    protected $hidden = ['remember_token'];
-
+	protected $table = 'ClientsPro';
+  protected $fillable = ['idClientsPro','raisonsociale','siret','remise'];
 	// Un client à une ou plusieurs prestations.
 	public function Prestations()
 	{

@@ -201,17 +201,17 @@ class CommandesController extends Controller
                 ->orderBy('count', 'desc')
                 ->lists('Prestations.nom');
         //-----------------------------------------------------------------------------------------//
-        $pointsFidelités = DB::table('Clients')->where('Clients.id', $userId)
-                ->selectRaw('Clients.pointsfidelité')
-                ->lists('Clients.pointsfidelité');
+        // $pointsFidelités = DB::table('Clients')->where('Clients.id', $userId)
+        //         ->selectRaw('Clients.pointsfidelité')
+        //         ->lists('Clients.pointsfidelité');
         //-----------------------------------------------------------------------------------------//
         // Requête séparé en deux parties pour les statistiques client avec ChartsJS
-        return view('appviews/dashboard', compact('GraphCommandesT','GraphCommandesN','Commandes','GraphPrestaN','GraphPrestaT','pointsFidelités'))
+        return view('appviews/dashboard', compact('GraphCommandesT','GraphCommandesN','Commandes','GraphPrestaN','GraphPrestaT'))
                        ->with('Commandes', $Commandes)
                        ->with('GraphPrestaN', $GraphPrestaN)
                        ->with('GraphPrestaT', $GraphPrestaT)
                        ->with('GraphCommandesT', $GraphCommandesT)
-                       ->with('pointsFidelités', $pointsFidelités)
+                      //  ->with('pointsFidelités', $pointsFidelités)
                        ->with('GraphCommandesN', $GraphCommandesN);
                        // ->with('calendar', $calendar);
         //------------------------------------------------------------------------------------------//
